@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Day03 {
 
@@ -17,11 +19,7 @@ public class Day03 {
             for (int i = 0; i < compartment1.length(); i++) {
                 char x = compartment1.charAt(i);
                 if (compartment2.contains(String.valueOf(x))) {
-                    if (Character.isUpperCase(x)) {
-                        score += (int) x - 38;
-                    } else {
-                        score += (int) x - 96;
-                    }
+                    score += getScore(x);
                     break;
                 }
             }
@@ -29,12 +27,33 @@ public class Day03 {
         return score;
     }
 
+    private static int getScore(char x) {
+        if (Character.isUpperCase(x)) {
+            return (int) x - 38;
+        } else {
+            return (int) x - 96;
+        }
+    }
+
     int part2() throws IOException {
-        BufferedReader reader = getInput("InputDay03Test");
+        BufferedReader reader = getInput("InputDay03");
         int score = 0;
-        int lineNumber = 1;
+        int elfNumber = 0;
+        Map<Integer, String> elfGroup = new HashMap<>();
         for (String line; (line = reader.readLine()) != null;) {
-            System.out.println(line);
+            elfGroup.put(elfNumber, line);
+            if (elfNumber == 2) {
+                System.out.println(elfGroup);
+                for (int i = 0; i < elfGroup.get(0).length(); i++) {
+                    char x = elfGroup.get(0).charAt(i);
+                    if (elfGroup.get(1).contains(String.valueOf(x)) && elfGroup.get(2).contains(String.valueOf(x))) {
+                        score += getScore(x);
+                        break;
+                    }
+                }
+                System.out.println("work");
+            }
+            elfNumber = (elfNumber + 1) % 3;
         }
         return score;
     }
